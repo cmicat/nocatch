@@ -5,6 +5,7 @@ import java.util.concurrent.Callable;
 
 public final class NoCatch {
 
+  @FunctionalInterface
   public interface NoCatchRunnable {
 
     void run() throws Exception;
@@ -19,7 +20,8 @@ public final class NoCatch {
     throw new AssertionError("Not instantiatable");
   }
 
-  public static void setDefaultWrapperException(Class<? extends RuntimeException> defaultWrapperException) {
+  public synchronized static void setDefaultWrapperException(
+      Class<? extends RuntimeException> defaultWrapperException) {
     DEFAULT_WRAPPER_EXCEPTION = defaultWrapperException;
   }
 
