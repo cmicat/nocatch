@@ -1,6 +1,7 @@
 package com.github.nocatch;
 
 import static com.github.nocatch.NoCatch.noCatch;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.Assert.assertThat;
@@ -11,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.net.MalformedURLException;
 import java.net.URL;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -89,10 +91,14 @@ public class NoCatchTest {
 
   @Test
   public void testNoCatchRunnableInvalidWrapperException() throws Exception {
-    expectedException.expect(ExceptionAdapter.class);
-    expectedException.expectCause(isA(MalformedURLException.class));
+//    expectedException.expect(ExceptionAdapter.class);
 
-    noCatch(() -> System.out.println(new URL(";")), InvalidWrapperException.class);
+    try {
+      noCatch(() -> System.out.println(new URL(";")), InvalidWrapperException.class);
+      Assert.fail("Expect exception to be thrown");
+    } catch (ExceptionAdapter e) {
+      assertThat(e.originalException, instanceOf(MalformedURLException.class));
+    }
   }
 
   @Test
@@ -123,10 +129,13 @@ public class NoCatchTest {
 
   @Test
   public void testNoCatchCallableInvalidWrapperException() throws Exception {
-    expectedException.expect(ExceptionAdapter.class);
-    expectedException.expectCause(isA(MalformedURLException.class));
 
-    noCatch(() -> new URL(";"), InvalidWrapperException.class);
+    try {
+      noCatch(() -> new URL(";"), InvalidWrapperException.class);
+      fail("should throw exception");
+    } catch (ExceptionAdapter e) {
+      assertTrue(e.originalException instanceof MalformedURLException);
+    }
   }
 
   @Test

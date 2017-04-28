@@ -20,25 +20,63 @@ public class ExceptionAdapter extends RuntimeException {
         stackTrace = sw.toString();
     }
 
+    @Override
     public void printStackTrace() {
         printStackTrace(System.err);
     }
 
+    @Override
     public void printStackTrace(java.io.PrintStream s) {
         synchronized (s) {
-            s.print(getClass().getName() + ": ");
             s.print(stackTrace);
         }
     }
 
+    @Override
     public void printStackTrace(java.io.PrintWriter s) {
         synchronized (s) {
-            s.print(getClass().getName() + ": ");
             s.print(stackTrace);
         }
     }
 
-    public void rethrow() {
+    @Override
+    public String getMessage() {
+        return originalException.getMessage();
+    }
+
+    @Override
+    public String getLocalizedMessage() {
+        return originalException.getLocalizedMessage();
+    }
+
+    @Override
+    public synchronized Throwable getCause() {
+        return originalException.getCause();
+    }
+
+    @Override
+    public synchronized Throwable initCause(Throwable cause) {
+        return originalException.initCause(cause);
+    }
+
+    @Override
+    public String toString() {
+        return originalException.toString();
+    }
+
+    @Override
+    public StackTraceElement[] getStackTrace() {
+        return originalException.getStackTrace();
+    }
+
+    @Override
+    public void setStackTrace(StackTraceElement[] stackTrace) {
+        originalException.setStackTrace(stackTrace);
+    }
+
+    public void rethrow() throws Exception {
         throw originalException;
     }
+
+
 }
