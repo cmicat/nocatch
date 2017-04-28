@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/nocatch.iml" filepath="$PROJECT_DIR$/nocatch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nocatch_main.iml" filepath="$PROJECT_DIR$/.idea/modules/nocatch_main.iml" group="nocatch" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/nocatch_test.iml" filepath="$PROJECT_DIR$/.idea/modules/nocatch_test.iml" group="nocatch" />
     </modules>
   </component>
 </project>

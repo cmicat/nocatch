@@ -13,7 +13,7 @@ public final class NoCatch {
   /**
    * Specifies the default runtime exception used to wrap checked exceptions.
    */
-  private static Class<? extends RuntimeException> DEFAULT_WRAPPER_EXCEPTION = NoCatchException.class;
+  private static Class<? extends RuntimeException> DEFAULT_WRAPPER_EXCEPTION = ExceptionAdapter.class;
 
   private NoCatch() {
     throw new AssertionError("Not instantiatable");
@@ -42,7 +42,7 @@ public final class NoCatch {
    * <strong>must</strong> provide a constructor that takes a cause as paramter and it <strong>must</strong> be a static
    * class.
    *
-   * @throws NoCatchException if any checked exception occurred
+   * @throws ExceptionAdapter if any checked exception occurred
    */
   public static void noCatch(NoCatchRunnable runnable, Class<? extends RuntimeException> wrapperException) {
     try {
@@ -60,9 +60,7 @@ public final class NoCatch {
       constructor.setAccessible(true);
       throw constructor.newInstance(exception);
     } catch (ReflectiveOperationException e) {
-      NoCatchException fallbackException = new NoCatchException("WARN: Could not wrap thrown exception using the " +
-          "specified wrapper (" + wrapperException.getName() + ". Your wrapper needs to have a constructor that takes a " +
-          "cause.", exception);
+      ExceptionAdapter fallbackException = new ExceptionAdapter(exception);
       fallbackException.addSuppressed(e);
       throw fallbackException;
     }
@@ -76,7 +74,7 @@ public final class NoCatch {
    *
    * @return the result of the callable
    *
-   * @throws NoCatchException if any checked exception is thrown
+   * @throws ExceptionAdapter if any checked exception is thrown
    */
   public static <T> T noCatch(Callable<T> callable) {
     return noCatch(callable, DEFAULT_WRAPPER_EXCEPTION);
@@ -93,7 +91,7 @@ public final class NoCatch {
    *
    * @return the result of the callable
    *
-   * @throws NoCatchException if any checked exception occurred
+   * @throws ExceptionAdapter if any checked exception occurred
    */
   public static <T> T noCatch(Callable<T> callable, Class<? extends RuntimeException> wrapperException) {
     try {
